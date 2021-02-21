@@ -17,18 +17,17 @@
 
 <style type="text/css">
 .caja {
- background-color:crimson;
+ background-color:#002EFF;
  height: 200px;
- width: 200px;
+ width: 500px;
  border: 2px solid black;
  padding: 5px;
- display: inline-block;
+ display:inline-flex;
  text-align:center;
- vertical-align: center;
- vertical-align: middle;
+ vertical-align: top;
  line-height: 200px;
  color:white;
- font-size: medium;
+ 
 }
 </style>
 
@@ -59,6 +58,14 @@
             $(document).ready(function(){
                 $('.caja').draggable();
 
+                $("mousedown").click(function(){
+                    var x = Math.round(0xffffff * Math.random()).toString(16);
+                    var y = (6-x.length);
+                    var z = "000000";
+                    var z1 = z.substring(0,y);
+                    var color = "#" + z1 + x;
+                $("caja").css("background-color", color );
+                });
             });
 
         </script>
@@ -114,9 +121,14 @@
             }
         });
 
+     socket.on('disconnect', function(){
+        alert("disconnected user");
+    });
+
         socket.on('connect', function() {
             console.log('Connect')
         });
+
 
         socket.on('new_message', function(msg) {
             // Recibimos los nuevos mensajes y los añadimos a nuestro array
@@ -127,7 +139,6 @@
             })
             app.$set(app, 'messages', my_messages);
         });
-
 
 
     </script>
