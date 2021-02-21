@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Chat</title>
+    <!---link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.css') }}"--->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+
+
+
+
+
+
+<style type="text/css">
+.caja {
+ background-color:crimson;
+ height: 200px;
+ width: 200px;
+ border: 2px solid black;
+ padding: 5px;
+ display: inline-block;
+ text-align:center;
+ vertical-align: center;
+ vertical-align: middle;
+ line-height: 200px;
+ color:white;
+ font-size: medium;
+}
+</style>
+
+</head>
+
+<body>
+    <div id="app">
+        <!-- Renderizará los nuevos mensajes -->
+        <section >
+
+            <div class="caja" id="arrastrable" v-for="message in messages">
+
+                <!--div--  >
+                <!--p-->
+                    <strong>@[[ message.username ]]</strong>:
+                    [[ message.text ]]<!--/p-->
+                <!--p--><!--/p-->
+                <!--/div-->
+            </div>
+        </section>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+
+
+
+        <script>
+            $(document).ready(function(){
+                $('#arrastrable').draggable();
+
+            });
+
+        </script>
+
+
+        <!-- Formulario para introducir nuevos mensajes -->
+        <section>
+            <input v-model="newMessage" @keypress.enter="sendMessage" type="text" placeholder="Escribe un mensaje...">
+            <button @click="sendMessage">Enviar</button>
+        </section>
+    </div>
+
+
+    <!------Generando dragable object----->
+
+
+    <!-- Importamos socket.io -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.slim.js"></script>
+    <!-- Importamos VueJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+    <script>
+        // Conectamos con nuestro dominio
+        var socket = io.connect('{{ domain }}');
+        // Instanciamos VueJS
+        var app = new Vue({
+            el: "#app",
+            delimiters: ['[[', ']]'],
+            data: {
+                username: '{{ username }}',
+                // Le damos los mensajes del hitorial
+                messages: [
+                {% for message in chat %}
+                    {
+                        username: '{{ message.username }}',
+                        text: '{{ message.text }}'
+                    }{% if not loop.last %},{% endif %}
+                {% endfor %}
+                ],
+                newMessage: ''
+            },
+            methods: {
+                sendMessage: () => {
+                    // Enviamos el nuevo mensaje
+                    socket.emit('new_message', {
+                        channel: app.channel,
+                        username: app.username,
+                        text: app.newMessage
+                    });
+                    // Clear text
+                    app.$set(app, 'newMessage', '');
+                }
+            }
+        });
+
+        socket.on('connect', function() {
+            console.log('Connect')
+        });
+
+        socket.on('new_message', function(msg) {
+            // Recibimos los nuevos mensajes y los añadimos a nuestro array
+            let my_messages = app.messages;
+            my_messages.push({
+                username: msg.username,
+                text: msg.text
+            })
+            app.$set(app, 'messages', my_messages);
+        });
+    </script>
+</body>
+
+</html>

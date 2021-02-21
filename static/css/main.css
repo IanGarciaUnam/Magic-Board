@@ -1,0 +1,22 @@
+section.new-message {
+	position: center;
+	bottom: 1rem;
+	left: 0;
+	right: 0;
+	z-index: 100;
+}
+
+.caja {
+ background-color:crimson;
+ height: 20px;
+ width: 20px;
+ border: 2px solid black;
+ padding: 5px;
+ display: inline-block;
+ text-align:center;
+ vertical-align: center;
+ vertical-align: middle;
+ line-height: 20px;
+ color:white;
+ font-size: medium;
+}
