@@ -36,29 +36,28 @@
 
 <body>
     <div id="app">
-        <!-- Renderizará los nuevos mensajes -->
-        <section >
-
-            <div class="caja" id="arrastrable" v-for="message in messages">
-
-                <!--div--  >
-                <!--p-->
-                    <strong>@[[ message.username ]]</strong>:
-                    [[ message.text ]]<!--/p-->
-                <!--p--><!--/p-->
-                <!--/div-->
-            </div>
-        </section>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
         <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
 
 
+        <!-- Renderizará los nuevos mensajes -->
+        <section >
+
+            <div  v-for="message in messages">
+                    <div class="caja"  >
+                <!--p--> <strong>@[[ message.username ]]</strong>:
+                    [[ message.text ]]<!--/p-->
+                <!--p--><!--/p-->
+                </div>
+            </div>
+        </section>
+
 
         <script>
             $(document).ready(function(){
-                $('#arrastrable').draggable();
+                $('.caja').draggable();
 
             });
 
@@ -71,6 +70,14 @@
             <button @click="sendMessage">Enviar</button>
         </section>
     </div>
+
+                <script>
+            $(document).ready(function(){
+                $('.new_message').draggable();
+
+            });
+
+        </script>
 
 
     <!------Generando dragable object----->
@@ -127,6 +134,13 @@
             })
             app.$set(app, 'messages', my_messages);
         });
+
+
+                        <script>
+            $(document).ready(function(){
+                $('.new_message').draggable();
+
+            });
     </script>
 </body>
 
